@@ -1,14 +1,9 @@
-export class Item {
-    name: string;
-    sellIn: number;
-    quality: number;
+import Item from './Item'
+import {ItemNameEnum} from './ItemNameEnum'
 
-    constructor(name, sellIn, quality) {
-        this.name = name;
-        this.sellIn = sellIn;
-        this.quality = quality;
-    }
-}
+const MAX_QUALITY = 50;
+const MIN_VALUE = 0;
+
 
 export class GildedRose {
     items: Array<Item>;
@@ -17,47 +12,57 @@ export class GildedRose {
         this.items = items;
     }
 
-    updateQuality() {
-        for (let item of this.items) {
-			if (item.name == 'Sulfuras, Hand of Ragnaros') {
-				continue
-			}
-			
-            if (item.name == 'Aged Brie' || item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-                if (item.quality < MAX_QUALITY) {
-                    item.quality++
-                    
-                    if (item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-                        if (item.sellIn <= 10 && item.quality < MAX_QUALITY) {
-                            item.quality++
-                        }
-                        if (item.sellIn <= 5 && item.quality < MAX_QUALITY) {
-                            item.quality++
-                        }
+    updateQuality() : Array<Item> {
+	    for (let item of this.items) {
+            switch (item.name) {
+                case ItemNameEnum.agedBrie:
+                    item.sellIn -= 1;
+					if (item.sellIn < MIN_VALUE & item.quality < MAX_QUALITY-1) {
+						item.quality += 2;
+					}
+					else if (item.quality < MAX_QUALITY) {
+						item.quality += 1;
+					}
+                    break
+                case ItemNameEnum.sulfuras:
+                    break
+                case ItemNameEnum.backstagePasses:
+					item.sellIn -= 1;
+					if (item.sellIn < MIN_VALUE) {
+						item.quality = MIN_VALUE;
+						break;
+					}
+					if (item.quality  >= MAX_QUALITY) {
+						break;
+					}
+					if (item.sellIn < 5) {
+                        item.quality = Math.min(item.quality + 3, MAX_QUALITY);
+						break;
                     }
-                }
-            } else {
-                if (item.quality > 0) {
-                    item.quality--
-                }
-            }
-            
-            item.sellIn--
-            
-            if (item.sellIn < 0) {
-                if (item.name == 'Aged Brie' && item.quality < MAX_QUALITY) {
-                    item.quality++
-                    continue
-                }
-                
-                if (item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-                    item.quality = 0
-                    continue
-                } 
-                
-                if (item.quality > 0) {
-                    item.quality--
-                }
+                    if (item.sellIn < 10) {
+                        item.quality = Math.min(item.quality + 2, MAX_QUALITY);
+						break;
+                    }
+                    item.quality += 1;
+					break;                    
+                case ItemNameEnum.conjured:
+                    item.sellIn -= 1;
+					if (item.sellIn < MIN_VALUE && item.quality > MIN_VALUE + 1) {
+						item.quality -= 2;
+					}
+					else if (item.quality > MIN_VALUE) {
+						item.quality -= 1;
+					}
+                    break
+				default:
+					item.sellIn -= 1;
+					if (item.sellIn < MIN_VALUE && item.quality > MIN_VALUE + 1) {
+						item.quality -= 2;
+					}
+					else if (item.quality > MIN_VALUE) {
+						item.quality -= 1;
+					}
+					break
             }
         }
 
