@@ -19,7 +19,7 @@ describe('Gilded Rose', function () {
 	it('default quality', function() {
         const gildedRose = new GildedRose([ new Item('foo', 10, 10) ]);
         const items = gildedRose.updateQuality();
-        expect(items[0].quality).to.equal(8);
+        expect(items[0].quality).to.equal(9);
     });
 	
 	it('Aged Brie quality #1', function() {

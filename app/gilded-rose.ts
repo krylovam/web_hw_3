@@ -17,7 +17,7 @@ export class GildedRose {
             switch (item.name) {
                 case ItemNameEnum.agedBrie:
                     item.sellIn -= 1;
-                    if (item.sellIn < MIN_VALUE & item.quality < MAX_QUALITY-1) {
+                    if (item.sellIn < MIN_VALUE && item.quality < MAX_QUALITY-1) {
                         item.quality += 2;
                     }
                     else if (item.quality < MAX_QUALITY) {
